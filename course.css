@@ -1,0 +1,40 @@
+/* Your existing CSS styles can be reused */
+
+.course-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.course-card {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 1em;
+    width: 300px;
+}
+
+.course-card img {
+    width: 100%;
+    border-radius: 5px;
+}
+
+/* Additional styling for course details */
+.course-details {
+    margin-top: 1em;
+}
+
+.course-details p {
+    margin: 0;
+    color: #555;
+}
+
+.course-details a {
+    display: block;
+    margin-top: 1em;
+    padding: 10px;
+    background-color: #007BFF;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+}

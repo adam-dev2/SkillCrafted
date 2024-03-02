@@ -77,6 +77,19 @@ async function userauthenticate(req,res,next)
     }
     
 }
+async function found(req,res,next)
+{
+    var k = (await usermodel.findOne({username : req.body.username}));
+    console.log(k);
+    if(k)
+    {
+        res.send({message : "username found"}).status(403);
+    }
+    else
+    {
+        next();
+    }
+}
 //////// ALL COURSES
 app.get("/courses",async(req,res) => {
     if(await coursemodel.find())
@@ -89,39 +102,52 @@ app.get("/courses",async(req,res) => {
     }
 })
 //////// USER Signup
-app.post("/user/signup",(req,res) => {
+app.post("/user/signup",found,(req,res) => {
     var username = req.body.username;
     var password = req.body.password;
-    const obj = {
-        username : req.body.username,
-        password : req.body.password
-   }
-   console.log(obj)
-   const secretkey = "S3cr3t";
-   const token = jwt.sign(obj,secretkey,{expiresIn : '1h'});
-   
-   const user = new usermodel({
-    username : username,
-    password : password
-    })
-
-    user.save();
-    res.send(user).status(200);
+    if(username == "" || password === "")
+    {
+        res.send({message: "invalid" }).status(403)
+    }
+    else
+    {
+        const obj = {
+            username : req.body.username,
+            password : req.body.password
+       }
+       console.log(obj)
+       const secretkey = "S3cr3t";
+       const token = jwt.sign(obj,secretkey,{expiresIn : '1h'});
+       
+       const user = new usermodel({
+        username : username,
+        password : password
+        })
+    
+        user.save();
+        res.send(user).status(200);
+    }
 })
 //////// USER LOGIN
 app.post("/user/login",async(req,res) => {
     var username = req.body.username;
     var password = req.body.password;
-
     if(await usermodel.findOne({username : username}))
     {
-        await usermodel.findOne({password : password}) ? (console.log("found the user")) : (console.log("WRONG PASSWORD"))
+        var k = await usermodel.findOne({username : username});
+        if(k.password === password)
+        {
+            res.send({message : "USER FOUND"}).status(200);
+        }
+        else
+        {
+            res.send({message : "WRONG PASSWORD"}).status(404);
+        }
     }
-    else
+    else if( !(await usermodel.findOne({username : username})))
     {
-        console.log("User name not found")
+        res.send({MESSAGE: "USERNAME NOT FOUND"})
     }
-    res.send(username);
 
 })
 //////// USER COURSE PURCHASE

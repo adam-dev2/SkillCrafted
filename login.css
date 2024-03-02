@@ -33,6 +33,7 @@ input {
     margin-bottom: 15px;
     border: 1px solid #ddd;
     border-radius: 4px;
+    margin-left: 5%;
 }
 
 button {
@@ -42,6 +43,7 @@ button {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    margin-left: 50%;
 }
 
 button:hover {
