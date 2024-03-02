@@ -1,26 +1,82 @@
 /* Your existing CSS styles can be reused */
 
+/* Global Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+/* Header Styles */
+header {
+    background-color: #1e3a4c;
+    color: #fff;
+    /* padding: 1em; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.5em;
+    color: #fff;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Main Content Styles */
+main {
+    padding: 2em;
+}
+
+/* Courses Page Styles */
 .course-list {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
+    justify-content: space-around; /* Adjust as needed */
 }
 
 .course-card {
     border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 1em;
-    width: 300px;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.course-card:hover {
+    transform: scale(1.05);
 }
 
 .course-card img {
     width: 100%;
-    border-radius: 5px;
+    height: 150px; /* Adjust as needed */
+    object-fit: cover;
+    border-radius: 8px 8px 0 0;
+}
+
+.course-card h3 {
+    font-size: 1.5em;
+    margin: 1em 0 0.5em;
+    color: #333;
+}
+
+.course-card p {
+    color: #555;
+    margin: 0.5em 0;
 }
 
 /* Additional styling for course details */
 .course-details {
-    margin-top: 1em;
+    padding: 1em;
+    background-color: #f8f8f8;
 }
 
 .course-details p {
@@ -32,9 +88,25 @@
     display: block;
     margin-top: 1em;
     padding: 10px;
-    background-color: #007BFF;
+    background-color: #ffa500;
     color: #fff;
     text-align: center;
     text-decoration: none;
     border-radius: 5px;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.course-details a:hover {
+    background-color: #e69500;
+}
+
+/* Footer Styles */
+footer {
+    background-color: #1e3a4c;
+    color: #fff;
+    text-align: center;
+    padding: 1em;
+    position: static;
+    bottom: 0;
+    width: 100%;
 }
