@@ -1,11 +1,13 @@
-const bodyParser = require("body-parser");
+const bodyParser = require('body-parser');
 const express = require("express");
 const mongoose = require('mongoose');
+const cors = require("cors");
 const jwt = require('jsonwebtoken');
 const app = express();
 const port = 8080;
 
-app.use(bodyParser.json())
+app.use(bodyParser.json());
+app.use(cors());
 mongoose.connect('mongodb+srv://shaikadam642:PgHZU4iTiJtQlRgY@cluster0.wzj4d7w.mongodb.net/users');
 
 const db = mongoose.connection;
@@ -90,11 +92,11 @@ app.get("/courses",async(req,res) => {
 app.post("/user/signup",(req,res) => {
     var username = req.body.username;
     var password = req.body.password;
-
     const obj = {
         username : req.body.username,
         password : req.body.password
    }
+   console.log(obj)
    const secretkey = "S3cr3t";
    const token = jwt.sign(obj,secretkey,{expiresIn : '1h'});
    
@@ -216,12 +218,13 @@ app.put("/teacher/course/:title",authenticate,async(req,res) => {
         var filter = {title : title};
         var update = { $set : {title : req.body.title, description : req.body.description, price : req.body.price}};
         await coursemodel.updateOne(filter,update)
+        res.send("Updated the course").status(200)
     }
     else
     {
         res.send("can't find the course").status(404);
     }
-    res.send("Updated the course").status(200)
+    
 })
 //////// TEACHER VIEW COURSE
 app.get("/teacher/course",authenticate,async(req,res) => {
