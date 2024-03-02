@@ -39,6 +39,7 @@ const usercoursescheme = new mongoose.Schema({
     purchased : Boolean
 })
 
+
 const usermodel = mongoose.model('usermodel',userscheme);
 const teachermodel = mongoose.model('teachermodel',teacherscheme);
 const coursemodel = mongoose.model('coursemodel', coursescheme);
@@ -74,7 +75,17 @@ async function userauthenticate(req,res,next)
     }
     
 }
-
+//////// ALL COURSES
+app.get("/courses",async(req,res) => {
+    if(await coursemodel.find())
+    {
+        res.send(await coursemodel.find());
+    }
+    else
+    {
+        res.send("COURSES NOT FOUND").status(404);
+    }
+})
 //////// USER Signup
 app.post("/user/signup",(req,res) => {
     var username = req.body.username;
@@ -112,17 +123,37 @@ app.post("/user/login",async(req,res) => {
 
 })
 //////// USER COURSE PURCHASE
-app.post('/user/course',userauthenticate,(req,res) => {
-    const usercourse = new usercoursemodel({
-        username : req.body.username,
-        title : req.body.title,
-        description : req.body.description,
-        price : req.body.price,
-        purchased : true
-    })
+app.post('/user/course',userauthenticate,async(req,res) => {
+
+    if(await coursemodel.findOne({title : req.body.title}))
+    {
+        const usercourse = new usercoursemodel({
+            username : req.body.username,
+            title : req.body.title,
+            description : req.body.description,
+            price : req.body.price,
+            purchased : true
+        })
+        
+        usercourse.save();
+        res.send(usercourse).status(200);
+    }
+    else
+    {
+        res.send("course not found").status(404);
+    }
     
-    usercourse.save();
-    res.send(usercourse).status(200);
+})
+//////// USER VIEW PURCHASED COURSES
+app.get("/user/course",userauthenticate,async(req,res) => {
+    if(await usercoursemodel.find({username : req.body.username}))
+    {
+        res.send(await usercoursemodel.find({username : req.body.username})).status(200);
+    }
+    else
+    {
+        res.send("NOT YET PURCHASED").status(404);
+    }
 })
 //////// TEACHER Signup
 app.post("/teacher/signup",(req,res) => {
