@@ -1,7 +1,7 @@
 const bodyParser = require("body-parser");
 const express = require("express");
 const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
 const app = express();
 const port = 8080;
 
@@ -31,10 +31,18 @@ const coursescheme = new mongoose.Schema({
     price : Number
 })
 
+const usercoursescheme = new mongoose.Schema({
+    username : String,
+    title : String,
+    description : String,
+    price : Number,
+    purchased : Boolean
+})
+
 const usermodel = mongoose.model('usermodel',userscheme);
 const teachermodel = mongoose.model('teachermodel',teacherscheme);
 const coursemodel = mongoose.model('coursemodel', coursescheme);
-
+const usercoursemodel = mongoose.model('usercourse', usercoursescheme);
 
 async function authenticate(req,res,next)
 {
@@ -51,7 +59,21 @@ async function authenticate(req,res,next)
     }
     
 }
+async function userauthenticate(req,res,next)
+{
+    var username = req.body.username;
+    var password = req.body.password;
 
+    if(await usermodel.findOne({username : username}))
+    {
+        await usermodel.findOne({password : password}) ? next() : res.send("NOT FOUND").status(404);
+    }
+    else
+    {
+        res.send("USER name not found").status(404);
+    }
+    
+}
 
 //////// USER Signup
 app.post("/user/signup",(req,res) => {
@@ -89,7 +111,19 @@ app.post("/user/login",async(req,res) => {
     res.send(username);
 
 })
-
+//////// USER COURSE PURCHASE
+app.post('/user/course',userauthenticate,(req,res) => {
+    const usercourse = new usercoursemodel({
+        username : req.body.username,
+        title : req.body.title,
+        description : req.body.description,
+        price : req.body.price,
+        purchased : true
+    })
+    
+    usercourse.save();
+    res.send(usercourse).status(200);
+})
 //////// TEACHER Signup
 app.post("/teacher/signup",(req,res) => {
     var username = req.body.username;
